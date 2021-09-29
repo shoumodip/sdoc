@@ -1,0 +1,18 @@
+cabal-version:      2.4
+name:               sdoc
+version:            0.1.0.0
+description:        Custom markdown document format
+license:            MIT
+author:             Shoumodip Kar
+maintainer:         shoumodipkar@gmail.com
+extra-source-files:
+
+executable sdoc
+    main-is:          Main.hs
+    other-modules:    Parser
+
+    build-depends:    base >=4.14
+                    , text >=1.2
+
+    hs-source-dirs:   src
+    default-language: Haskell2010

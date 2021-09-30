@@ -5,5 +5,5 @@ Custom markdown document format implemented in Haskell.
 ```console
 $ git clone https://github.com/shoumodip/sdoc
 $ cd sdoc
-$ cabal v2-run
+$ cabal run
 ```

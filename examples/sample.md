@@ -1,11 +1,11 @@
-* Hello, world in haskell
+# Hello, world in haskell
 
 The classical "Hello, world!" in Haskell:
 
 > main :: IO ()
 > main = putStrLn "Hello, world!"
 
-** References
+## References
 Man pages:
-- ghc
-- runghc
+* ghc
+* runghc

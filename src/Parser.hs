@@ -3,6 +3,8 @@
 module Parser
   (
     Lexeme
+  , Document
+
   , parseDocument
   , parseLines
   ) where
@@ -24,8 +26,10 @@ data Lexeme = Normal [T.Text]
             | BList [T.Text]
             deriving Show
 
+type Document = [Lexeme]
+
 isCode :: T.Text -> Bool
-isCode = T.isPrefixOf ">"
+isCode = T.isPrefixOf "```"
 
 isNList :: T.Text -> Bool
 isNList = T.isPrefixOf "*"
@@ -48,12 +52,10 @@ skip1 = T.strip . T.drop 1
 headerLevel :: T.Text -> Int
 headerLevel = T.length . T.takeWhile (== '#')
 
-type Document = [Lexeme]
-
 parseLines :: [T.Text] -> Document
 parseLines [] = []
 parseLines ls
-  | isCode l   = splitApply (Code . map skip1) parseLines isCode ls
+  | isCode l   = splitApply Code (parseLines . tail) (not . isCode) $ tail ls
   | isNList l  = splitApply (NList . map skip1) parseLines isNList ls
   | isBList l  = splitApply (BList . map skip1) parseLines isBList ls
   | isHeader l = Header h (skipN h l):parseLines (tail ls)

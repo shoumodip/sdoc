@@ -2,8 +2,10 @@
 
 The classical "Hello, world!" in Haskell:
 
-> main :: IO ()
-> main = putStrLn "Hello, world!"
+```haskell
+main :: IO ()
+main = putStrLn "Hello, world!"
+```
 
 ## References
 Man pages:

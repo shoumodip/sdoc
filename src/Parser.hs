@@ -1,8 +1,6 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Parser
   (
-    Lexeme
+    Lexeme(Normal, Header, Code, NList, BList)
   , Document
 
   , parseDocument
@@ -41,7 +39,7 @@ isHeader :: T.Text -> Bool
 isHeader = T.isPrefixOf "#"
 
 isNormal :: T.Text -> Bool
-isNormal l = not $ isCode l || isNList l || isBList l || isHeader l
+isNormal = not . or . sequence [isCode, isNList, isBList, isHeader]
 
 skipN :: Int -> T.Text -> T.Text
 skipN n = T.strip . T.drop n

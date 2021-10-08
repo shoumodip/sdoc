@@ -1,8 +1,12 @@
-import Parser
-import qualified Data.Text.IO as T
+import System.Environment
 
-sampleFile :: String
-sampleFile = "examples/sample.md"
+import qualified Data.Text.IO as T
+import qualified Html         as H
+import qualified Parser       as P
+
+sdocHtml :: [FilePath] -> IO ()
+sdocHtml (input:output:_) = T.readFile input >>=
+  T.writeFile output . H.document . P.parseDocument
 
 main :: IO ()
-main = T.readFile sampleFile >>= mapM_ print . parseDocument
+main = getArgs >>= sdocHtml

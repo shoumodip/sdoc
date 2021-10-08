@@ -11,9 +11,11 @@ executable sdoc
     main-is:            Main.hs
     other-modules:      Parser
                       , Html
+                      , Latex
 
     build-depends:      base >=4.14
                       , text >=1.2
+                      , filepath >= 1.4
 
     hs-source-dirs:     src
     default-language:   Haskell2010

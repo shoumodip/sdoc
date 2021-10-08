@@ -1,4 +1,4 @@
-module Html (document, lexemeHtml) where
+module Html (document) where
 
 import qualified Data.Text as T
 import qualified Parser    as P
@@ -10,7 +10,7 @@ listItems :: T.Text -> [T.Text] -> T.Text
 listItems o = wrapTag o . T.unlines . map (wrapTag "li")
 
 lexemeHtml :: P.Lexeme -> T.Text
-lexemeHtml (P.Normal t)   = wrapTag "p" $ T.unlines t
+lexemeHtml (P.Normal t)   = T.unlines t
 lexemeHtml (P.Header n t) = wrapTag (T.pack $ "h" <> show n) t
 lexemeHtml (P.Code t)     = wrapTag "pre" $ T.unlines t
 lexemeHtml (P.NList t)    = listItems "ol" t

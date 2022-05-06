@@ -1,0 +1,76 @@
+import std.io
+import src.parser
+
+let begin(output *File, label Str) {
+    fprint!(output, "<", label, ">\n")
+}
+
+let end(output *File, label Str) {
+    fprint!(output, "</", label, ">\n")
+}
+
+let end(output *File, type uint) bool {
+    match type {
+        parser.LINE_CODE => {
+            end(output, "pre")
+            return false
+        }
+
+        parser.LINE_NLIST => end(output, "ol")
+        parser.LINE_BLIST => end(output, "ul")
+    }
+
+    return true
+}
+
+let generate(output *File) {
+    begin(output, "html")
+    begin(output, "body")
+    {
+        let prev_type = parser.LINE_NORMAL
+
+        while parser.left() {
+            let line = parser.next()
+            let showp = true
+
+            if prev_type != line.type {
+                showp = end(output, prev_type)
+
+                match line.type {
+                    parser.LINE_CODE => {
+                        begin(output, "pre")
+                        showp = false
+                    }
+
+                    parser.LINE_NLIST => begin(output, "ol")
+                    parser.LINE_BLIST => begin(output, "ul")
+                }
+            }
+
+            let listp = line.type == parser.LINE_BLIST || line.type == parser.LINE_NLIST
+            let headerp = line.type == parser.LINE_HEADER
+
+            if listp {
+                begin(output, "li")
+            } else if headerp {
+                fprint!(output, "<h", line.data, ">\n")
+            }
+
+            if showp {
+                fprint!(output, line.str, '\n')
+            }
+
+            if listp {
+                end(output, "li")
+            } else if headerp {
+                fprint!(output, "</h", line.data, ">\n")
+            }
+
+            prev_type = line.type
+        }
+
+        end(output, prev_type)
+    }
+    end(output, "body")
+    end(output, "html")
+}

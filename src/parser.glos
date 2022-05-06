@@ -1,0 +1,73 @@
+import std.string
+
+const (
+    LINE_CODE
+    LINE_BLIST
+    LINE_NLIST
+    LINE_NORMAL
+    LINE_HEADER
+)
+
+struct Line {
+    str Str
+    type uint
+    data uint
+}
+
+struct Parser {
+    contents Str
+    iota uint
+    prev uint
+}
+
+let parser Parser
+
+let init(contents Str) {
+    parser.contents = contents
+    parser.iota = 0
+    parser.prev = LINE_NORMAL
+}
+
+let next() Line {
+    let line Line
+    line.str = string.trim(string.split(&parser.contents, '\n'), ' ')
+    line.data = 0
+
+    if string.starts_with(line.str, "*") {
+        line.type = LINE_NLIST
+        line.str = string.trim_left(string.advance(line.str, 1), ' ')
+    } else if string.starts_with(line.str, "-") {
+        line.type = LINE_BLIST
+        line.str = string.trim_left(string.advance(line.str, 1), ' ')
+    } else if string.starts_with(line.str, "#") {
+        line.type = LINE_HEADER
+        let start = string.trim_left(line.str, '#')
+
+        line.data = line.str.size - start.size
+        line.str = string.trim_left(start, ' ')
+    } else if string.starts_with(line.str, "```") {
+        line.type = LINE_CODE
+    } else if parser.prev == LINE_CODE {
+        line.type = parser.prev
+    } else {
+        line.type = LINE_NORMAL
+    }
+
+    if line.type == LINE_NLIST {
+        parser.iota += 1
+        line.data = parser.iota
+    } else {
+        parser.iota = 0
+    }
+
+    if string.eq(line.str, "```") {
+        line.type = LINE_NORMAL
+    }
+
+    parser.prev = line.type
+    return line
+}
+
+let left() bool {
+    return parser.contents.size > 0
+}

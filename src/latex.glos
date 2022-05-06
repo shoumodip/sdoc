@@ -1,0 +1,81 @@
+import std.io
+import src.parser
+
+let begin(output *File, label Str) {
+    fprint!(output, "\\begin{", label, "}\n")
+}
+
+let end(output *File, label Str) {
+    fprint!(output, "\\end{", label, "}\n")
+}
+
+let end(output *File, type uint) bool {
+    match type {
+        parser.LINE_CODE => {
+            end(output, "verbatim")
+            return false
+        }
+
+        parser.LINE_NLIST => end(output, "enumerate")
+        parser.LINE_BLIST => end(output, "itemize")
+    }
+
+    return true
+}
+
+let generate(output *File) {
+    fprint!(output, "\\documentclass{article}\n")
+    begin(output, "document")
+    {
+        let prev_type = parser.LINE_NORMAL
+
+        while parser.left() {
+            let line = parser.next()
+            let showp = true
+
+            if prev_type != line.type {
+                showp = end(output, prev_type)
+
+                match line.type {
+                    parser.LINE_CODE => {
+                        begin(output, "verbatim")
+                        showp = false
+                    }
+
+                    parser.LINE_NLIST => begin(output, "enumerate")
+                    parser.LINE_BLIST => begin(output, "itemize")
+                }
+            }
+
+            let headerp = line.type == parser.LINE_HEADER
+            let listp = line.type == parser.LINE_BLIST || line.type == parser.LINE_NLIST
+
+            if listp {
+                fprint!(output, "\\item ")
+            } else if headerp {
+                fprint!(output, '\\')
+                for let i = 1; i < line.data; i += 1 {
+                    fprint!(output, "sub")
+                }
+                fprint!(output, "section{")
+            }
+
+            if showp {
+                fprint!(output, line.str)
+            }
+
+            if headerp {
+                fprint!(output, '}')
+            }
+
+            if showp {
+                fprint!(output, '\n')
+            }
+
+            prev_type = line.type
+        }
+
+        end(output, prev_type)
+    }
+    end(output, "document")
+}

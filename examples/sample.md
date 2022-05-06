@@ -1,13 +1,14 @@
-# Hello, world in haskell
+# Header - The level depends on the number of hashes
 
-The classical "Hello, world!" in Haskell:
+This is normal text.
 
-```haskell
-main :: IO ()
-main = putStrLn "Hello, world!"
+```python
+print("This is a code block")
+print("Just like Github flavoured markdown")
 ```
 
-## References
-Man pages:
-* ghc
-* runghc
+- Unordered list item
+- Another one
+
+* Ordered list item
+* Another one

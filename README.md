@@ -5,7 +5,7 @@ Custom markdown document format in Glos
 - Requires [glos](https://github.com/shoumodip/glos)
 
 ```console
-$ make
+$ ./build.sh
 $ ./sdoc examples/sample.md output.html
 $ ./sdoc examples/sample.md output.latex
 ```

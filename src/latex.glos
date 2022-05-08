@@ -2,11 +2,11 @@ import std.io
 import src.parser
 
 let begin(output *File, label Str) {
-    fprint!(output, "\\begin{", label, "}\n")
+    fprint(output, "\\begin{", label, "}\n")
 }
 
 let end(output *File, label Str) {
-    fprint!(output, "\\end{", label, "}\n")
+    fprint(output, "\\end{", label, "}\n")
 }
 
 let end(output *File, type uint) bool {
@@ -24,7 +24,7 @@ let end(output *File, type uint) bool {
 }
 
 let generate(output *File) {
-    fprint!(output, "\\documentclass{article}\n")
+    fprint(output, "\\documentclass{article}\n")
     begin(output, "document")
     {
         let prev_type = parser.LINE_NORMAL
@@ -51,25 +51,25 @@ let generate(output *File) {
             let listp = line.type == parser.LINE_BLIST || line.type == parser.LINE_NLIST
 
             if listp {
-                fprint!(output, "\\item ")
+                fprint(output, "\\item ")
             } else if headerp {
-                fprint!(output, '\\')
-                for let i = 1; i < line.data; i += 1 {
-                    fprint!(output, "sub")
+                fprint(output, '\\')
+                for let i = 1, i < line.data, i += 1 {
+                    fprint(output, "sub")
                 }
-                fprint!(output, "section{")
+                fprint(output, "section{")
             }
 
             if showp {
-                fprint!(output, line.str)
+                fprint(output, line.str)
             }
 
             if headerp {
-                fprint!(output, '}')
+                fprint(output, '}')
             }
 
             if showp {
-                fprint!(output, '\n')
+                fprint(output, '\n')
             }
 
             prev_type = line.type

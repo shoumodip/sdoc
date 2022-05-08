@@ -2,11 +2,11 @@ import std.io
 import src.parser
 
 let begin(output *File, label Str) {
-    fprint!(output, "<", label, ">\n")
+    fprint(output, "<", label, ">\n")
 }
 
 let end(output *File, label Str) {
-    fprint!(output, "</", label, ">\n")
+    fprint(output, "</", label, ">\n")
 }
 
 let end(output *File, type uint) bool {
@@ -53,17 +53,17 @@ let generate(output *File) {
             if listp {
                 begin(output, "li")
             } else if headerp {
-                fprint!(output, "<h", line.data, ">\n")
+                fprint(output, "<h", line.data, ">\n")
             }
 
             if showp {
-                fprint!(output, line.str, '\n')
+                fprint(output, line.str, '\n')
             }
 
             if listp {
                 end(output, "li")
             } else if headerp {
-                fprint!(output, "</h", line.data, ">\n")
+                fprint(output, "</h", line.data, ">\n")
             }
 
             prev_type = line.type

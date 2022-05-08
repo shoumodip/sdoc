@@ -13,8 +13,8 @@ const (
 
 let main() {
     if argc < 2 {
-        eprint!("Usage: sdoc INPUT OUTPUT\n")
-        eprint!("Error: insufficient arguments\n")
+        eprint("Usage: sdoc INPUT OUTPUT\n")
+        eprint("Error: insufficient arguments\n")
         linux.exit(1)
     }
 
@@ -28,23 +28,23 @@ let main() {
     } else if string.eq(ext, "html") {
         fmt = FMT_HTML
     } else {
-        eprint!("Error: unsupported extension '", ext, "'\n")
-        eprint!("Supported:\n")
-        eprint!("  html\n")
-        eprint!("  latex\n")
+        eprint("Error: unsupported extension '", ext, "'\n")
+        eprint("Supported.\n")
+        eprint("  html\n")
+        eprint("  latex\n")
         linux.exit(1)
     }
 
     let contents, ok = io.map_file(input)
     if !ok {
-        eprint!("Error: could not open file '", input, "'\n")
+        eprint("Error: could not open file '", input, "'\n")
         linux.exit(1)
     }
     parser.init(contents)
 
     let outfd = linux.creat(output, 420)
     if outfd < 0 {
-        eprint!("Error: could not create file '", output, "'\n")
+        eprint("Error: could not create file '", output, "'\n")
         linux.exit(1)
     }
 
@@ -52,7 +52,7 @@ let main() {
     match fmt {
         FMT_LATEX => latex.generate(&file)
         FMT_HTML => html.generate(&file)
-        _ => assert!(false, "unreachable")
+        _ => assert(false, "unreachable")
     }
     io.flush(&file)
 }
